@@ -1,5 +1,7 @@
 import csv
 
+from utils import *
+
 data = []
 with open('ads.csv', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
@@ -7,44 +9,18 @@ with open('ads.csv', encoding='utf-8') as csvfile:
         data.append(row)
 
 del data[0]
-names = []
-for item in data:
-    names.append(item[2])
 
-unique_names = list(set(names))
+names = [item[2] for item in data]
+authors_file_name = 'authors.csv'
 
-names_dict = {}
-id_n = 0
-for name in unique_names:
-    names_dict[name] = id_n
-    id_n += 1
+names_dict = make_dict(names, authors_file_name)
 
-with open('authors.csv', 'w', newline='', encoding='utf-8') as csvfile_n:
-    writer = csv.writer(csvfile_n, delimiter=',')
-    for k, v in names_dict.items():
-        d_l_a = [v, k]
-        writer.writerow(d_l_a)
+addresses = [item[5] for item in data]
+addresses_file_name = 'addresses.csv'
 
-addresses = []
-for item in data:
-    addresses.append(item[5])
+addresses_dict = make_dict(addresses, addresses_file_name)
 
-unique_addresses = list(set(addresses))
-
-addresses_dict = {}
-id_a = 0
-for addr in unique_addresses:
-    addresses_dict[addr] = id_a
-    id_a += 1
-
-print(addresses_dict)
-with open('addresses.csv', 'w', newline='', encoding='utf-8') as csvfile_a:
-    writer = csv.writer(csvfile_a, delimiter=',')
-    for k, v in addresses_dict.items():
-        d_l_ad = [v, k]
-        writer.writerow(d_l_ad)
-
-with open('ads_new.csv', 'w', encoding='utf-8') as csvfile_ads:
+with open('ads_new.csv', 'w', newline='', encoding='utf-8') as csvfile_ads:
     writer = csv.writer(csvfile_ads, delimiter=',')
     for item in data:
         item[2] = names_dict[item[2]]
